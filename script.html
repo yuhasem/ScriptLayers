@@ -1,0 +1,36 @@
+<script>
+function onSuccess(result) {
+  var displayText = "";
+  if (result.success) {
+    displayText += "<p>Success!</p>";
+  } else {
+    displayText += "<p>Something went wrong during execution. Here's what we know:</p>";
+  }
+  for (var i = 0; i < result.messages.length; i++) {
+    displayText += result.messages[i] + "<br>";
+  }
+  document.getElementById("result").innerHTML = displayText;
+  window.scrollTo(0,document.body.scrollHeight);
+}
+
+function onFailure(err) {
+  document.getElementById("result").innerHTML = "Something went very wrong while trying to process your request: " + err.toString();
+  window.scrollTo(0,document.body.scrollHeight);
+}
+
+function prepareConfig() {
+  var config = {};
+  config["generate-gif-sheet"] = document.getElementById("generate-gif-sheet").checked;
+  config["gif-sheet-generation-style"] = document.getElementById("gif-sheet-generation-style").value;
+  config["script-start-keyword"] = document.getElementById("script-start-keyword").value;
+  config["script-end-keyword"] = document.getElementById("script-end-keyword").value;
+  linkEl = document.getElementById("gif-sheet-link");
+  if (linkEl) {
+    config["gif-sheet-link"] = linkEl.value;
+  }
+  config["parser-strip-text-between-square-brackets"] = document.getElementById("parser-strip-text-between-square-brackets").checked;
+  config["parser-strip-text-between-curly-braces"] = document.getElementById("parser-strip-text-between-curly-braces").checked;
+  config["parser-strip-text-between-angle-brackets"] = document.getElementById("parser-strip-text-between-angle-brackets").checked;
+  google.script.run.withSuccessHandler(onSuccess).withFailureHandler(onFailure).useConfig(config);
+}
+</script>
